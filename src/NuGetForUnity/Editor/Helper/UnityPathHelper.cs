@@ -29,7 +29,45 @@ namespace NugetForUnity.Helper
         {
             AbsoluteAssetsPath = Path.GetFullPath(Application.dataPath);
             AbsoluteProjectPath = Path.GetDirectoryName(AbsoluteAssetsPath) ?? throw new InvalidOperationException("Can't detect project root.");
-            AbsoluteUnityPackagesNugetPath = Path.GetFullPath(Path.Combine(AbsoluteProjectPath, "Packages/nuget-packages"));
+            AbsoluteUnityPackagesNugetPath = Path.Combine(AbsoluteHoloForgeSDKPath(), "HFPackages", "HFCommonNugetPackages");
+        }
+
+        private static string AbsoluteHoloForgeSDKPath()
+        {
+            return FindDirectoryUnderParents("HoloForgeSDK");
+        }
+
+        private static string FindDirectoryUnderParents(string _directoryName)
+        {
+            for (int i = 1; i < 10; ++i)
+            {
+                string sub = SubFolder(i);
+                
+                string? absolutePath = Path.Combine(Application.dataPath, sub);
+                string[] directories = Directory.GetDirectories(absolutePath, _directoryName);
+
+                absolutePath = directories.FirstOrDefault((_path) => _path.EndsWith(_directoryName));
+
+                if (string.IsNullOrEmpty(absolutePath))
+                {
+                    continue;
+                }
+
+                return absolutePath;
+            }
+
+            Debug.LogError($"Can not find {_directoryName}");
+            return "";
+        }
+        
+        private static string SubFolder(int _count)
+        {
+            string sub = string.Empty;
+            for (int i = 0; i < _count; ++i)
+            {
+                sub = Path.Combine(sub, "..");
+            }
+            return sub;
         }
 
         /// <summary>
