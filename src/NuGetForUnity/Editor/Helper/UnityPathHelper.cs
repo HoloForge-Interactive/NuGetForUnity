@@ -5,6 +5,7 @@ using System.IO;
 using JetBrains.Annotations;
 using NugetForUnity.Configuration;
 using UnityEngine;
+using System.Linq;
 
 #region No ReShaper
 
